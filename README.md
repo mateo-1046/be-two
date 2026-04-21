@@ -105,7 +105,7 @@ If a student moves the pipe logic directly into the service instead of using it 
 
 Now, what happens if the pipe is used as `@Param('id', ParseMongoIdPipe)` but `@Injectable()` is removed from the pipe? Can NestJS still instantiate the pipe?
 
----
+Rta:// Mover la lógica del pipe al servicio implica perder la separación de responsabilidades, ya que la validación dejaría de realizarse en la capa de entrada y se mezclaría con la lógica de negocio. Los pipes en NestJS se ejecutan antes de que la solicitud llegue al controlador, lo que permite validar y transformar los datos de forma temprana. Si se elimina el decorador @Injectable(), NestJS no podrá instanciar el pipe cuando se use en el controlador, lo que generará un error en tiempo de ejecución. Esto demuestra que los pipes no solo validan, sino que también forman parte del sistema de inyección de dependencias.
 
 ## Question 9
 
@@ -122,3 +122,5 @@ A teammate reorders the code and places `app.useGlobalPipes(...)` as the first l
 Does the app behavior change? Why or why not?
 
 Second scenario: another teammate moves `app.enableCors()` to after `app.listen()`. Does that affect anything? Explain the exact moment at which `enableCors` must be registered for it to work correctly.
+
+ Rta:// ambiar el orden de las configuraciones en main.ts, colocando useGlobalPipes antes de setGlobalPrefix y enableCors, no afecta el comportamiento de la aplicación, ya que todas estas configuraciones se aplican antes de que el servidor comience a escuchar peticiones. Sin embargo, si enableCors() se ejecuta después de app.listen(), ya no tendrá efecto, porque el servidor ya está en funcionamiento y no se aplicarán cambios en la configuración. Por lo tanto, es fundamental que todas las configuraciones se definan antes de iniciar el servidor.
